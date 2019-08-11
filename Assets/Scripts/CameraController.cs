@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         #region Get stuffs
-        m_Target = Player.instance.transform;
+        //m_Target = Player.instance.transform;
         #endregion
 
         #region Lock Cursor to center

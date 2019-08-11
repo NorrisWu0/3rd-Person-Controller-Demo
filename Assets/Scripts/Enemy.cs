@@ -108,7 +108,7 @@ public class Enemy : MonoBehaviour
 
     Vector3 m_PlayerPos
     {
-        get { return Player.instance.transform.position; }
+        get { return Vector3.zero; }
         set { m_PlayerPos = value; }
     }
     #endregion
