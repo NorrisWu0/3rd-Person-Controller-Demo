@@ -161,6 +161,11 @@ ModelImporter:
     13700006: Paladin_J_Nordstrom_Sword
   externalObjects:
   - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Paladin_MAT
+    second: {fileID: 2100000, guid: ac9c8c096b5aca64baf6be77edc27829, type: 2}
+  - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Paladin_diffuse
