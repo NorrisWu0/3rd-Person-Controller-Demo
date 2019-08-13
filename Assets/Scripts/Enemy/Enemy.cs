@@ -31,6 +31,7 @@ public class Enemy : MonoBehaviour
 
     #region Enemy Function
 
+    #region Idle
     IEnumerator Idle()
     {
         m_NavAgent.speed = m_PatrolSpeed;
@@ -63,6 +64,7 @@ public class Enemy : MonoBehaviour
 
         StartCoroutine("FollowPlayer");
     }
+    #endregion
 
     #region Follow Player
     IEnumerator FollowPlayer()
@@ -116,14 +118,22 @@ public class Enemy : MonoBehaviour
     #region Debug Function
     private void OnDrawGizmosSelected()
     {
+        // Attack Range Gizmo
         Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, m_AttackRange);
+
+        // Detection Range Gizmo
+        Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, m_DetectionRange);
 
+        // Chase Range Gizmo
         Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, m_ChaseRange);
+
+        // Random Destination Gizmo
+        Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(m_RandomPos, .5f);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, m_ChaseRange);
     }
     #endregion
 }
