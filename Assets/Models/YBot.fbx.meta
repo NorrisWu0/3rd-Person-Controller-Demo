@@ -151,7 +151,17 @@ ModelImporter:
     9500000: //RootNode
     13700000: Alpha_Joints
     13700002: Alpha_Surface
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Alpha_Body_MAT
+    second: {fileID: 2100000, guid: c8789f654d7ef534d810ccde4e5a389f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Alpha_Joints_MAT
+    second: {fileID: 2100000, guid: 0ebb8b1641ab27b4a98a792724b4a98a, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
