@@ -201,10 +201,10 @@ public class Enemy : MonoBehaviour
     #region Debug Functions
     public void ClearLog()
     {
-        var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
-        var type = assembly.GetType("UnityEditor.LogEntries");
-        var method = type.GetMethod("Clear");
-        method.Invoke(new object(), null);
+        //var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
+        //var type = assembly.GetType("UnityEditor.LogEntries");
+        //var method = type.GetMethod("Clear");
+        //method.Invoke(new object(), null);
     }
 
     private void OnDrawGizmosSelected()
