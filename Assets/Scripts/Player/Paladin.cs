@@ -6,6 +6,7 @@ public class Paladin : Player {
 
     [Header("Weapon Setting", order = 3)]
     [SerializeField] bool m_IsAttacking;
+    [SerializeField] MeshCollider m_SwordCollider;
     [SerializeField] GameObject m_SwordTrailVFX;
 
     private enum m_AttackType {LightAttack, HeavyAttack};
@@ -28,7 +29,7 @@ public class Paladin : Player {
             Attack(m_AttackType.HeavyAttack);
         #endregion
 
-        #region Toggle Sword VFX - TODO
+        #region Toggle Sword VFX & Sword Collider - TODO
         if (!m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"))
         {
             m_IsAttacking = true;

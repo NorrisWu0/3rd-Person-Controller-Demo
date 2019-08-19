@@ -194,6 +194,11 @@ ModelImporter:
     13700000: Zombie_Geo
   externalObjects:
   - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Zombie_COL
+    second: {fileID: 2100000, guid: a2ccfe589dd319e47b780af60b647bc0, type: 2}
+  - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Zombie_diffuse

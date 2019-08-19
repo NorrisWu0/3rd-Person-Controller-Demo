@@ -139,7 +139,8 @@ ModelImporter:
     400130: mixamorig:Spine1
     400132: mixamorig:Spine2
     400134: //RootNode
-    7400000: Zombie_Hit_Rection
+    7400000: Zombie_Hit_Rection_Waste
+    7400002: Zombie_Hit_Rection
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -172,8 +173,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Zombie_Hit_Rection
       takeName: mixamo.com
-      firstFrame: 0
-      lastFrame: 120
+      firstFrame: 17
+      lastFrame: 95
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -185,7 +186,7 @@ ModelImporter:
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 1
+      keepOriginalOrientation: 0
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
       heightFromFeet: 0

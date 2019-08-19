@@ -3,12 +3,16 @@ using System.Reflection;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
     [Header("Basic Setting")]
     [SerializeField] bool m_IsDead;
     [SerializeField] float m_Health;
+    [SerializeField] float m_TotalHealth;
+    [SerializeField] Canvas m_OverheadUI;
+    [SerializeField] Slider m_HealthBar;
 
     [Header("Behavior Setting")]
     [SerializeField] bool m_IsWandering;
@@ -17,14 +21,18 @@ public class Enemy : MonoBehaviour
     [Space(5)]
     [SerializeField] bool m_IsChasing;
     [SerializeField] float m_ChaseSpeed;
-    [SerializeField] float m_ChaseStoppingDistance;
+    [SerializeField] float m_AttackRange;
 
     [Header("Attack Setting")]
     public Transform m_Target;
     [SerializeField] FieldOfView m_FOV1;
     [SerializeField] FieldOfView m_FOV2;
     [SerializeField] bool m_IsAttacking;
-    [SerializeField] float m_AttackRange;
+
+    [Header("DeathFX Setting")]
+    [SerializeField] Dissolve m_Joints;
+    [SerializeField] Dissolve m_Surface;
+    [SerializeField] float m_DeathTimer;
 
 
     private Animator m_Animator;
@@ -34,15 +42,24 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        m_TotalHealth = m_Health;
         m_Animator = GetComponent<Animator>();
         m_NavAgent = GetComponent<NavMeshAgent>();
 
+        UpdateUIStats();
         StartCoroutine("Wander");
     }
 
     void Update()
     {
-        Move();
+        if (!m_IsDead)
+            Move();
+        else
+            Destroy(this.gameObject, m_DeathTimer);
+
+        #region Rotate OverheadUI towards Camera
+        m_OverheadUI.transform.LookAt(Camera.main.transform.position);
+        #endregion
 
         #region Ugly code but damn it I don't have enought time to figure out a better way for this!
         if (m_FOV1.target != null)
@@ -52,12 +69,6 @@ public class Enemy : MonoBehaviour
         else
             m_Target = null;
         #endregion
-
-        if (m_Target == null)
-            Debug.Log("No target.");
-        else
-            Debug.Log(m_Target);
-
     }
 
     void OnAnimatorMove()
@@ -65,9 +76,48 @@ public class Enemy : MonoBehaviour
         m_NavAgent.velocity = m_Animator.deltaPosition / Time.deltaTime;
     }
 
-    #region Wander Function
+    #region Update UI Stats
+    void UpdateUIStats()
+    {
+        #region Update Health Bar
+        float _value = m_Health / m_TotalHealth;
+        m_HealthBar.value = _value;
+        #endregion
+    }
+    #endregion
+
+    #region TakeDamage Function
+    public void TakeDamage(float _damage)
+    {
+        m_Health -= _damage;
+        UpdateUIStats();
+        StartCoroutine("StartHitAnimation");
+
+        if (m_Health <= 0)
+        {
+            m_IsDead = true;
+            m_Animator.SetBool("IsDead", true);
+        }
+    }
+    #endregion
+
+    #region Start Hit Rection Animation
+    IEnumerator StartHitAnimation()
+    {
+        Time.timeScale = 0.2f;
+        m_Animator.SetBool("IsHit", true);
+
+        yield return new WaitForSecondsRealtime(0.3f);
+        
+        Time.timeScale = 1;
+        m_Animator.SetBool("IsHit", false);
+    }
+    #endregion
+
+    #region Wander Coroutine
     IEnumerator Wander()
     {
+        Debug.Log("In Wander Mode");
         m_IsWandering = true;
         m_OriginPos = transform.position;
         m_NavAgent.speed = m_WanderSpeed;
@@ -75,7 +125,6 @@ public class Enemy : MonoBehaviour
 
         while (m_Target == null)
         {
-            Debug.Log("In Wander Mode");
             #region Set Patrol Destination
             m_RandomPos = m_OriginPos + (Random.insideUnitSphere * 5);
             m_RandomPos.y = 0;
@@ -104,27 +153,29 @@ public class Enemy : MonoBehaviour
     }
     #endregion
 
-    #region Chase Target
+    #region ChaseTarget Coroutine
     IEnumerator ChaseTarget()
     {
+        Debug.Log("In Chase Mode");
         m_IsChasing = true;
         m_NavAgent.speed = m_ChaseSpeed;
-        m_NavAgent.stoppingDistance = m_ChaseStoppingDistance;
+        m_NavAgent.stoppingDistance = m_AttackRange;
 
         while (m_Target != null)
         {
-            Debug.Log("In Chase Mode");
             m_NavAgent.SetDestination(m_Target.position);
 
+            if (Vector3.Distance(transform.position, m_Target.position) < m_AttackRange)
+                m_IsAttacking = true;
+            else
+                m_IsAttacking = false;
+
+            m_Animator.SetBool("IsAttacking", m_IsAttacking);
             yield return null;
         }
-
-        ClearLog();
-        Debug.Log("Lost Target!");
         
         while (m_NavAgent.remainingDistance > m_NavAgent.stoppingDistance)
         {
-            Debug.Log(m_NavAgent.remainingDistance + "/" + m_NavAgent.stoppingDistance);
             yield return null;
         }
 
@@ -147,7 +198,7 @@ public class Enemy : MonoBehaviour
     }
     #endregion
 
-    #region Debug Function
+    #region Debug Functions
     public void ClearLog()
     {
         var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));

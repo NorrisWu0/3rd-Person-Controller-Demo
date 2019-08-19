@@ -1,11 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     [Header("Basic Setting", order = 1)]
+    [SerializeField] bool m_IsDead;
     [SerializeField] float m_Health;
+    private float m_TotalHealth;
+
+    [Header("UI Setting")]
+    [SerializeField] Slider m_HealthBar;
 
     [Header("Movement Setting", order = 2)]
     [SerializeField] float m_CurrentSpeed;
@@ -14,7 +20,7 @@ public class Player : MonoBehaviour
     public float allowPlayerRotation;
     private float m_MoveHorizontal;
     private float m_MoveVertical;
-
+    
     #region Todo
     public Vector3 desiredMoveDirection;
     public bool blockRotationPlayer;
@@ -37,8 +43,12 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        m_TotalHealth = m_Health;
         m_Animator = GetComponent<Animator>();
         m_MainCamera = Camera.main;
+
+        UpdateUI();
+
     }
     
     protected void Update()
@@ -48,6 +58,41 @@ public class Player : MonoBehaviour
         else
             GetMovementInput(m_WalkSpeed);
     }
+
+    #region Take Damage
+    public void TakeDamage(float _damage)
+    {
+
+        m_Health -= _damage;
+        UpdateUI();
+        StartCoroutine("StartHitAnimation");
+
+        if (m_Health <= 0)
+        {
+            m_IsDead = true;
+            m_Animator.SetBool("IsDead", true);
+        }
+    }
+    #endregion
+
+    #region Start Hit Rection Animation
+    IEnumerator StartHitAnimation()
+    {
+        m_Animator.SetBool("IsHit", true);
+        yield return null;
+        m_Animator.SetBool("IsHit", false);
+    }
+    #endregion
+
+    #region Update UI
+    void UpdateUI()
+    {
+        #region Update Health Bar
+        float _value = (m_Health / m_TotalHealth);
+        m_HealthBar.value = _value;
+        #endregion
+    }
+    #endregion
 
     #region Movement Functions
     protected void Move()
