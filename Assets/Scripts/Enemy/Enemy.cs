@@ -14,6 +14,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] Canvas m_OverheadUI;
     [SerializeField] Slider m_HealthBar;
 
+    [Header("Audio Setting")]
+    [SerializeField] AudioClip[] m_IdleSFXs;
+    private AudioSource m_AudioSource;
+
     [Header("Behavior Setting")]
     [SerializeField] bool m_IsWandering;
     [SerializeField] float m_WanderSpeed;
@@ -40,11 +44,20 @@ public class Enemy : MonoBehaviour
     private Vector3 m_OriginPos;
     private Vector3 m_RandomPos;
 
+    private void Awake()
+    {
+        m_AudioSource = GetComponent<AudioSource>();
+    }
+
     void Start()
     {
         m_TotalHealth = m_Health;
         m_Animator = GetComponent<Animator>();
         m_NavAgent = GetComponent<NavMeshAgent>();
+
+        AudioClip _randomSFX = m_IdleSFXs[Random.Range(0, m_IdleSFXs.Length)];
+        m_AudioSource.clip = _randomSFX;
+        m_AudioSource.Play();
 
         UpdateUIStats();
         StartCoroutine("Wander");

@@ -200,7 +200,7 @@ ModelImporter:
         floatParameter: 2.4
         intParameter: 0
         messageOptions: 0
-      - time: 0.5429769
+      - time: 0.5272466
         functionName: ToggleHitbox
         data: 
         objectReferenceParameter: {instanceID: 0}
